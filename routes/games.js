@@ -1,10 +1,15 @@
 import { Router } from 'express';
 const router = Router();
 import axios from 'axios';
+import { config } from 'dotenv';
 
-const apiKey = '871dd9aecdc7c167115f448dcc395bbd78c6437b';
+config();
+
+const apiKey = process.env.apiKey;
 
 router.get('/:guid', async (req, res) => {
+    console.log(apiKey);
+
     const { data } = await axios.get(`https://www.giantbomb.com/api/game/${req.params.guid}/?api_key=${apiKey}&format=json&field_list=expected_release_quarter,expected_release_day,expected_release_month,expected_release_year,deck,original_release_date,image,name,platforms,similar_games,publishers,developers,genres,original_game_rating`);
 
     let platforms = [];
