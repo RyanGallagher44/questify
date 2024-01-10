@@ -1,16 +1,18 @@
-import { Router } from 'express';
+import { Router } from "express";
 const router = Router();
-import axios from 'axios';
-import { config } from 'dotenv';
+import axios from "axios";
+import { config } from "dotenv";
 
 config();
 
 const apiKey = process.env.apiKey;
 
-router.get('/:guid', async (req, res) => {
+router.get("/:guid", async (req, res) => {
     console.log(apiKey);
 
-    const { data } = await axios.get(`https://www.giantbomb.com/api/game/${req.params.guid}/?api_key=${apiKey}&format=json&field_list=expected_release_quarter,expected_release_day,expected_release_month,expected_release_year,deck,original_release_date,image,name,platforms,similar_games,publishers,developers,genres,original_game_rating`);
+    const { data } = await axios.get(
+        `https://www.giantbomb.com/api/game/${req.params.guid}/?api_key=${apiKey}&format=json&field_list=expected_release_quarter,expected_release_day,expected_release_month,expected_release_year,deck,original_release_date,image,name,platforms,similar_games,publishers,developers,genres,original_game_rating`
+    );
 
     let platforms = [];
     if (data.results.platforms) {
@@ -43,15 +45,35 @@ router.get('/:guid', async (req, res) => {
     let similarGames = [];
     if (data.results.similar_games) {
         data.results.similar_games.forEach((similarGame) => {
-            similarGames.push({ title: similarGame.name, guid: similarGame.api_detail_url.split("/")[similarGame.api_detail_url.split("/").length-2]});
+            similarGames.push({
+                title: similarGame.name,
+                guid: similarGame.api_detail_url.split("/")[
+                    similarGame.api_detail_url.split("/").length - 2
+                ],
+            });
         });
     }
 
     let expectedReleaseDate = "";
-    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    let months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
     if (!data.results.original_release_date) {
         if (data.results.expected_release_month) {
-            expectedReleaseDate += `${months[data.results.expected_release_month-1]} `;
+            expectedReleaseDate += `${
+                months[data.results.expected_release_month - 1]
+            } `;
         }
         if (data.results.expected_release_day) {
             expectedReleaseDate += `${data.results.expected_release_day}, `;
@@ -72,14 +94,16 @@ router.get('/:guid', async (req, res) => {
         shortDesc: data.results.deck,
         imageUrl: data.results.image.original_url,
         similarGames: similarGames,
-        expectedReleaseDate: expectedReleaseDate
+        expectedReleaseDate: expectedReleaseDate,
     };
 
     res.json(gameObject);
 });
 
-router.get('/search/:term', async (req, res) => {
-    const { data } = await axios.get(`https://www.giantbomb.com/api/search/?api_key=${apiKey}&format=json&resources=game&query=${req.params.term}`);
+router.get("/search/:term", async (req, res) => {
+    const { data } = await axios.get(
+        `https://www.giantbomb.com/api/search/?api_key=${apiKey}&format=json&resources=game&query=${req.params.term}`
+    );
 
     let games = [];
     data.results.forEach((game) => {
@@ -96,11 +120,11 @@ router.get('/search/:term', async (req, res) => {
             guid: game.guid,
             platforms: platforms,
             shortDesc: game.deck,
-            imageUrl: game.image.original_url
+            imageUrl: game.image.original_url,
         };
         games.push(gameObject);
     });
-    
+
     res.json(games);
 });
 
