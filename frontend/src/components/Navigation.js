@@ -153,7 +153,9 @@ const Navigation = () => {
                                 </div>
                             </li>
                         </ul>
-                        <Friends />
+                        <div class="flex-grow h-[400px] overflow-y-auto">
+                            <Friends />
+                        </div>
                     </div>
                 )}
             </div>

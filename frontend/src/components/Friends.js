@@ -1,16 +1,19 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import {useAuth} from "./AuthContext";
 
 const Friends = () => {
     const [loading, setLoading] = useState(true);
     const [friendsData, setFriendsData] = useState(undefined);
+    const { authToken } = useAuth();
 
     useEffect(() => {
         async function fetchData() {
             try {
                 const { data } = await axios.get(
-                    `/auth/account/friends/${localStorage.getItem("authToken")}`
+                    `/auth/account/friends/${authToken}`
                 );
+                console.log(data);
                 setFriendsData(data.people);
                 setLoading(false);
             } catch (e) {
@@ -19,8 +22,10 @@ const Friends = () => {
             }
         }
 
-        fetchData();
-    }, []);
+        if (authToken) {
+            fetchData();
+        }
+    }, [authToken]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -33,7 +38,7 @@ const Friends = () => {
             };
             return (
                 presenceOrder[friendA.presenceState] -
-                    presenceOrder[friendB.presenceState] ||
+                presenceOrder[friendB.presenceState] ||
                 friendA.displayName.localeCompare(friendB.displayName)
             );
         });
@@ -42,9 +47,9 @@ const Friends = () => {
             <div>
                 <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
                     {sortedFriends.map((friend) => (
-                        <li key={friend.id}>
+                        <li key={friend.xuid}>
                             <a
-                                href="/me"
+                                href={`/profile/${friend.xuid}`}
                                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                             >
                                 <img

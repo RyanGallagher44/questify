@@ -7,6 +7,8 @@ import Profile from './components/Profile';
 import { AuthProvider } from './components/AuthContext';
 import Navigation from './components/Navigation';
 import Friends from './components/Friends';
+import OtherProfile from "./components/OtherProfile";
+import Marketplace from "./components/Marketplace";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
               <Route path="/game/:id" element={<Game />} />
               <Route path="/me" element={<Profile />} />
               <Route path="/friends" element={<Friends />} />
+              <Route path="/profile/:id" element={<OtherProfile />} />
+              <Route path="/marketplace" element={<Marketplace />} />
             </Routes>
           </div>
         </div>
