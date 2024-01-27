@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({children}) => {
     const [authToken, setAuthToken] = useState(null);
     const [userProfile, setUserProfile] = useState(null);
 
@@ -35,13 +35,11 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("userProfile");
     };
 
-    return (
-        <AuthContext.Provider
-            value={{ authToken, userProfile, setAuthData, clearAuthData }}
-        >
-            {children}
-        </AuthContext.Provider>
-    );
+    return (<AuthContext.Provider
+        value={{authToken, userProfile, setAuthData, clearAuthData}}
+    >
+        {children}
+    </AuthContext.Provider>);
 };
 
 export const useAuth = () => {

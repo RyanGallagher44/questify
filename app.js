@@ -1,13 +1,16 @@
 import express from "express";
+
 const app = express();
 import configRoutes from "./routes/index.js";
 import cors from "cors";
 import redis from "redis";
+
 const client = redis.createClient();
-client.connect().then(() => {});
+client.connect().then(() => {
+});
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
 app.get("/auth/account/:id/:token", async (req, res, next) => {

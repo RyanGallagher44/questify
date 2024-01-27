@@ -6,7 +6,7 @@ const constructorMethod = (app) => {
     app.use("/auth", authRoutes);
 
     app.use("*", (req, res) => {
-        res.status(404).json({ error: "This endpoint does not exist!" });
+        res.status(404).json({error: "This endpoint does not exist!"});
     });
 };
 
